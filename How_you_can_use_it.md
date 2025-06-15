@@ -7,9 +7,172 @@ and hit enter. This should download and run libretranslate
 Preferably, to save the model and not have to redownload it every time, you can run in the terminal: docker save -o libretranslate.tar libretranslate/libretranslate:latest
 
 Next step is to download the folder in the repository titled "project_model". In it is the rest of everything needed. The python script
-titled sentiment_analyzer_app.py can be run by itself for demonstrative purposes or can be imported to be used in another script. Just
-make sure that in whichever folder sentiment_analyzer_app.py is, so are the other model files, or you could edit sentiment_analyzer_app.py to always look for the other files
+titled multilingual_sentiment_classifier.py can be run by itself for demonstrative purposes or can be imported to be used in another script. Just make sure that in whichever folder multilingual_sentiment_classifier.py is, so are the other model files, or you could edit sentiment_analyzer_app.py to always look for the other files
 in a specific directory instead of the one it is currently located in.
 
 Note: If you get any errors of the like: "cl.exe not found in PATH". You could run the python file in "Developer command prompt for VS 2022" if you have visual studio installed, as it worked for us when the issue occured.
 
+That's all for the human instructions, here's an AI generated manual for the model:
+
+# **Multilingual Product Review Sentiment Classifier**
+
+This repository contains a Python script (multilingual\_sentiment\_classifier.py) designed to classify the sentiment of product reviews in multiple languages. It leverages a locally trained modernBERT model for sentiment analysis in English and integrates with a local LibreTranslate instance to handle translations from various input languages.
+
+## **Features**
+
+* **Multilingual Support:** Classify reviews in languages other than English by automatically detecting and translating them.  
+* **Flexible Translation Modes:**  
+  * **Automatic:** Automatically detect the language of a review and translate it to English before classification.  
+  * **Manual:** Assume a specific input language for reviews and translate it to English.  
+* **Local Execution:** All models and translation services run locally, ensuring data privacy and offline capability.
+
+## **Prerequisites**
+
+Before you can use this classifier, make sure you have the following set up:
+
+1. **Python 3.8+:** This script is written in Python.  
+2. **Python Libraries:** You'll need transformers, requests, and torch.  
+3. **LibreTranslate:** A local instance of LibreTranslate must be running and accessible.  
+4. **ModernBERT Model Files:** Your trained modernBERT model files must be in the correct location.
+
+## **Setup and Installation**
+
+### **1\. Place Model Files**
+
+Ensure your modernBERT model files are in the **same directory** as the multilingual\_sentiment\_classifier.py script. These files are:
+
+* model.safetensors  
+* config.json  
+* special\_tokens\_map.json  
+* tokenizer.json  
+* tokenizer\_config.json
+
+The script is designed to automatically load the model from the current working directory.
+
+### **2\. Install Python Dependencies**
+
+Open your terminal or command prompt and run the following command to install the required Python libraries:
+
+pip install transformers requests torch
+
+### **3\. Run LibreTranslate Locally**
+
+You need a running LibreTranslate server. The easiest way to get started is by using Docker:
+
+docker run \-ti \-p 5000:5000 libretranslate/libretranslate
+
+This command will start LibreTranslate on http://localhost:5000. If you run it on a different port or host, remember to update the libretranslate\_url when initializing the classifier.
+
+## **Usage**
+
+### **1\. Import the Classifier**
+
+In your Python application or script, import the MultilingualSentimentClassifier class:
+
+from multilingual\_sentiment\_classifier import MultilingualSentimentClassifier
+
+### **2\. Initialize the Classifier**
+
+Create an instance of the classifier. By default, it expects LibreTranslate to be running on http://localhost:5000. If your LibreTranslate instance is elsewhere, provide its URL:
+
+\# Default initialization  
+classifier \= MultilingualSentimentClassifier()
+
+\# If LibreTranslate is on a different URL/port  
+\# classifier \= MultilingualSentimentClassifier(libretranslate\_url="http://your-libretranslate-host:your-port")
+
+Upon initialization, the script will attempt to load your modernBERT model and tokenizer. You'll see a message confirming successful loading or an error if files are missing.
+
+### **3\. Set Translation Mode**
+
+The classifier has an internal state for its translation mode, which determines how it handles non-English reviews. You can control this state using the set\_translation\_mode method.
+
+#### **Automatic Detection Mode ("auto")**
+
+In this mode, the classifier will automatically detect the language of the input review using LibreTranslate. If the detected language is not English, it will translate the review to English before classifying its sentiment. This is the default mode.
+
+classifier.set\_translation\_mode("auto")
+
+review\_spanish \= "Este producto es excelente y lo recomiendo mucho. ¡Cinco estrellas\!"  
+result \= classifier.classify\_sentiment(review\_spanish)  
+print(result)  
+\# Expected output (sentiment might vary based on your model):  
+\# {'original\_review': 'Este producto es excelente y lo recomiendo mucho. ¡Cinco estrellas\!',  
+\#  'original\_language': 'es',  
+\#  'translated\_review': 'This product is excellent and I highly recommend it. Five stars\!',  
+\#  'predicted\_label': 'LABEL\_4', 'predicted\_score': 0.99, 'mapped\_stars': 5}
+
+review\_english \= "This product is absolutely fantastic\! Five stars well deserved."  
+result \= classifier.classify\_sentiment(review\_english)  
+print(result)  
+\# Expected output:  
+\# {'original\_review': 'This product is absolutely fantastic\! Five stars well deserved.',  
+\#  'original\_language': 'en',  
+\#  'translated\_review': 'This product is absolutely fantastic\! Five stars well deserved.',  
+\#  'predicted\_label': 'LABEL\_4', 'predicted\_score': 0.99, 'mapped\_stars': 5}
+
+#### **Manual Language Mode ("manual")**
+
+In this mode, you explicitly tell the classifier what language to assume the review is in. It will then translate from this assumed language to English if needed. This is useful if you know the source language of a batch of reviews and want to skip language detection for performance or accuracy.
+
+\# Set mode to manual, assuming French reviews  
+classifier.set\_translation\_mode("manual", assumed\_lang="fr")
+
+review\_french \= "Ce produit est horrible. Je ne l'achèterais plus jamais."  
+result \= classifier.classify\_sentiment(review\_french)  
+print(result)  
+\# Expected output (sentiment might vary):  
+\# {'original\_review': 'Ce produit est horrible. Je ne l\\'achèterais plus jamais.',  
+\#  'original\_language': 'fr',  
+\#  'translated\_review': 'This product is horrible. I would never buy it again.',  
+\#  'predicted\_label': 'LABEL\_0', 'predicted\_score': 0.97, 'mapped\_stars': 1}
+
+\# If you set manual mode without \`assumed\_lang\`, it defaults to "en" (English).  
+classifier.set\_translation\_mode("manual") \# Assumed language is now "en" by default
+
+review\_english\_manual \= "Great value, highly recommend."  
+result \= classifier.classify\_sentiment(review\_english\_manual)  
+print(result)  
+\# Expected output:  
+\# {'original\_review': 'Great value, highly recommend.',  
+\#  'original\_language': 'en',  
+\#  'translated\_review': 'Great value, highly recommend.',  
+\#  'predicted\_label': 'LABEL\_4', 'predicted\_score': 0.99, 'mapped\_stars': 5}
+
+### **4\. Classify Sentiment**
+
+Use the classify\_sentiment method, passing the review text as a string:
+
+review\_text \= "Das ist ein fantastisches Produkt, sehr empfehlenswert\!"  
+sentiment\_result \= classifier.classify\_sentiment(review\_text)  
+print(sentiment\_result)
+
+## **Output Structure**
+
+The classify\_sentiment method returns a dictionary containing the following keys:
+
+* original\_review (str): The raw review text provided as input.  
+* original\_language (str): The detected or assumed language code of the original review (e.g., "en", "es", "fr").  
+* translated\_review (str): The review translated into English (same as original if original\_language was "en").  
+* predicted\_label (str): The sentiment label predicted by your modernBERT model (e.g., "LABEL\_0", "LABEL\_1", ..., "LABEL\_4").  
+* predicted\_score (float): The confidence score (probability) of the predicted label, rounded to 4 decimal places.  
+* mapped\_stars (int or None): An integer representing the 1-5 star rating based on the predicted\_label. This mapping assumes LABEL\_0 is 1-star, LABEL\_1 is 2-stars, and so on. If the label format doesn't match this expectation, it will be None.  
+* error (str, optional): This key will be present with an error message if any issues occur during model loading, translation, or classification.
+
+## **Important Notes and Customization**
+
+### **Mapping Labels to Star Ratings**
+
+The script includes a utility to map the model's predicted\_label (e.g., LABEL\_0, LABEL\_1, LABEL\_2, LABEL\_3, LABEL\_4) to a 1-5 star rating. This mapping (LABEL\_X \-\> X+1 stars) is a common convention for 5-star classification tasks.
+
+**If your modernBERT model was trained with a different mapping (e.g., LABEL\_0 means 5 stars, LABEL\_4 means 1 star), you must adjust the mapped\_stars logic within the classify\_sentiment method to correctly interpret your model's output.**
+
+### **LibreTranslate Connection Errors**
+
+If LibreTranslate is not running or is inaccessible at the specified libretranslate\_url, the \_libretranslate\_api\_call method will print an error message to the console, and translation/detection steps will gracefully fail, returning the original text or an error message. Ensure LibreTranslate is always running before using the classifier.
+
+### **Model Loading Errors**
+
+If the model.safetensors, config.json, special\_tokens\_map.json, tokenizer.json, or tokenizer\_config.json files are not found in the same directory as the script, the \_load\_model method will print an error, and sentiment classification will not be possible. Double-check your file placement if you encounter this error.
+
+Feel free to open an issue or pull request if you have suggestions or encounter problems\!
