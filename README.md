@@ -53,6 +53,18 @@ Although this is for 5-star classification. It achieves higher accuracy on 3-lab
 
 You can find the confusion matrices and model accuracies for different languages on our poster document.
 
+##Conclusion
+This project successfully developed an AI model for multilingual product review sentiment classification, demonstrating a practical approach to analyzing customer feedback across diverse languages. By combining LibreTranslate for translation and ModernBERT for sentiment classification, we created a system that can process reviews without requiring specialized hardware. While the model showed promising accuracy on English reviews (around 55% for 5-star classification and 76% for 3-label classification), its performance on non-English languages, when paired with LibreTranslate, varied, with German (51.4%) and Spanish (50.9%) performing better than French (49.9%), Japanese (40.8%), and Chinese (39.3%). These results highlight the inherent challenges of cross-lingual sentiment analysis, where translation quality can significantly impact the final classification accuracy. Despite these variations, the model offers a viable and accessible solution for e-commerce platforms looking to leverage sentiment analysis from a wide array of international customer reviews.
+
+##Future Steps
+Several avenues exist to enhance the model's performance and expand its capabilities:
+
+Improving Multilingual Accuracy: Focus on fine-tuning the ModernBERT model with more diverse multilingual datasets. Exploring alternative translation models or incorporating cross-lingual embedding techniques directly into the sentiment classification model could also lead to significant improvements in non-English language accuracy.
+Domain-Specific Fine-Tuning: The current model was trained on a general dataset of Amazon reviews. Training on product reviews specific to certain e-commerce categories or industries could further boost accuracy by capturing domain-specific nuances and vocabulary.
+Exploring Other Classification Tasks: While the project focused on 5-star and 3-label classification, future work could explore more granular sentiment classification (e.g., aspect-based sentiment analysis) or integrate named entity recognition to identify specific product features being discussed in reviews.
+Optimizing Model Size and Inference Speed: Although the current solution aims for accessibility, further optimization of the ModernBERT model's size and inference speed could make it even more practical for resource-constrained environments or real-time applications. Techniques like model quantization or distillation could be explored.
+User Interface and Integration: Developing a user-friendly interface or API wrapper would make the model more accessible to non-technical users and facilitate easier integration into existing e-commerce analytics platforms.
+
 ## How to use it  
 
 
