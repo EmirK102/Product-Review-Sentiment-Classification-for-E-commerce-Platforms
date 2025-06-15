@@ -9,6 +9,8 @@ The dataset we used is called "Amazon Reviews Multi" (https://www.kaggle.com/dat
 
 ## Model training.
 
+The code we used for training and creating the model is in the provided file "sentiment_classifier_model_source_code.ipynb"
+
 We decided to try training the model in three stages, using three disjoint subsets of the part of the training dataset that is in English. The first stage consists of training the model on the first training dataset by concatenating the product categories, review titles, and review bodies of the reviews within it. The second stage consists of training the model on the second training dataset, but this time only concatenating the review titles and review bodies. The third stage consists of only training on review bodies. The idea is to make the model learn the particularities of the reviews of different product categories and, in a way, to put it on training wheels and to slowly make it adjust to only classifying reviews without additional data. We found that different ratios of dataset sizes don't produce drastically different final model accuracies. They all gave accuracies of around 55% when tested on English product reviews.
 
 ## Evaluation
