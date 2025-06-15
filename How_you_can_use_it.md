@@ -6,7 +6,7 @@ and hit enter. This should download and run libretranslate
 
 Preferably, to save the model and not have to redownload it every time, you can run in the terminal: docker save -o libretranslate.tar libretranslate/libretranslate:latest
 
-Next step is to download the folder in the repository titled "project_model". In it is the rest of everything needed. The python script
+Next step is to download the folder in the repository titled "project_model".We couldn't upload it to github as it's too big, but you can find it on this google drive link:  In it is the rest of everything needed. The python script
 titled multilingual_sentiment_classifier.py can be run by itself for demonstrative purposes or can be imported to be used in another script. Just make sure that in whichever folder multilingual_sentiment_classifier.py is, so are the other model files, or you could edit it to always look for the other files
 in a specific directory instead of the one it is currently located in.
 
