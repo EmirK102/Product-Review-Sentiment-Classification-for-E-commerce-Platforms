@@ -227,3 +227,6 @@ If LibreTranslate is not running or is inaccessible at the specified libretransl
 
 If the model.safetensors, config.json, special\_tokens\_map.json, tokenizer.json, or tokenizer\_config.json files are not found in the same directory as the script, the \_load\_model method will print an error, and sentiment classification will not be possible. Double-check your file placement if you encounter this error.
 
+### **License**
+
+This project is licensed under the MIT License.
