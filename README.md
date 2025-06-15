@@ -2,6 +2,13 @@
 
 This project is about the creation of an AI model that enables its users to perform sentiment classification in a wide range of languages on written product reviews without the need for professional-grade or outsourced hardware/computational resources.  This is done by combining two AI models: LibreTranslate and ModernBERT. LibreTranslate is used for identifying the language in which reviews are written, and translating the reviews into English if they're in a different language, and ModernBERT is used for classifying the sentiment of English reviews. Specifically, for classifying how many stars out of five were given to a product.
 
+## Problem Definition
+E-commerce platforms face significant challenges in efficiently analyzing multilingual product reviews for sentiment. Existing solutions often demand substantial hardware or outsourcing, limiting accessibility and scalability for businesses seeking to understand customer feedback across diverse linguistic backgrounds and accurately classify multi-star ratings.
+
+## Overview
+This project introduces an accessible AI model for multilingual product review sentiment classification, designed to operate without the need for professional-grade computational resources. It integrates LibreTranslate for automatic language detection and translation of reviews into English, and a fine-tuned ModernBERT model for classifying sentiment into 1-5 star ratings based on the translated English text. This combined approach allows for efficient and accurate sentiment analysis across various languages, providing valuable insights into customer opinions.
+
+
 
 ## Dataset
 
