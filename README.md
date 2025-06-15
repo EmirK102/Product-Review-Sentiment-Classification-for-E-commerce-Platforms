@@ -49,7 +49,7 @@ Chinese language accuracy: 39.3%
 ![chinese_language_confusion_matrix](https://github.com/user-attachments/assets/134aaee0-9078-46ea-8a2b-5d7f8dd60326)
 
 
-Although this is for 5-star classification. It achieves higher accuracy on 3-label classification, achieving 76% on English-language 3-label sentiment classification.
+Although, this is for 5-star classification. It achieves higher accuracy on 3-label classification, achieving 76% on English-language 3-label sentiment classification. By "3-label sentiment classification" we mean treating the label 3 as neutral, treating labels greater than 3 as positive, and treating labels less than 3 as negative.
 
 You can find the confusion matrices and model accuracies for different languages on our poster document.
 
