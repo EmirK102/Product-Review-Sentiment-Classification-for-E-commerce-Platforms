@@ -53,10 +53,12 @@ Although this is for 5-star classification. It achieves higher accuracy on 3-lab
 
 You can find the confusion matrices and model accuracies for different languages on our poster document.
 
-##Conclusion
+## Conclusion
+
 This project successfully developed an AI model for multilingual product review sentiment classification, demonstrating a practical approach to analyzing customer feedback across diverse languages. By combining LibreTranslate for translation and ModernBERT for sentiment classification, we created a system that can process reviews without requiring specialized hardware. While the model showed promising accuracy on English reviews (around 55% for 5-star classification and 76% for 3-label classification), its performance on non-English languages, when paired with LibreTranslate, varied, with German (51.4%) and Spanish (50.9%) performing better than French (49.9%), Japanese (40.8%), and Chinese (39.3%). These results highlight the inherent challenges of cross-lingual sentiment analysis, where translation quality can significantly impact the final classification accuracy. Despite these variations, the model offers a viable and accessible solution for e-commerce platforms looking to leverage sentiment analysis from a wide array of international customer reviews.
 
-##Future Steps
+## Future Steps
+
 Several avenues exist to enhance the model's performance and expand its capabilities:
 
 Improving Multilingual Accuracy: Focus on fine-tuning the ModernBERT model with more diverse multilingual datasets. Exploring alternative translation models or incorporating cross-lingual embedding techniques directly into the sentiment classification model could also lead to significant improvements in non-English language accuracy.
