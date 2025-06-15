@@ -15,103 +15,76 @@ Note: If you get any errors of the like: "cl.exe not found in PATH". You could r
 
 (AI generated) How to use it when imported into another script:
 
-Method Manual: SentimentAnalyzer and LibreTranslateClient
-This manual provides a detailed description of the methods available in the SentimentAnalyzer class and its internal LibreTranslateClient class, as defined in sentiment_analyzer_app.py.
+# **Method Manual: SentimentAnalyzer and LibreTranslateClient**
 
-1. SentimentAnalyzer Class Methods
+This manual provides a detailed description of the methods available in the SentimentAnalyzer class and its internal LibreTranslateClient class, as defined in sentiment\_analyzer\_app.py.
+
+### **1\. SentimentAnalyzer Class Methods**
+
 This is the main class you will interact with to perform sentiment analysis.
 
-__init__(self, model_path: str, libretranslate_url: str)
-Description: Initializes the SentimentAnalyzer object. It loads your BERT-based sentiment model and tokenizer, sets up the connection to the LibreTranslate server, and defines the default translation mode.
+#### **\_\_init\_\_(self, model\_path: str, libretranslate\_url: str)**
 
-Parameters:
+* **Description:** Initializes the SentimentAnalyzer object. It loads your BERT-based sentiment model and tokenizer, sets up the connection to the LibreTranslate server, and defines the default translation mode.  
+* **Parameters:**  
+  * model\_path (str): The file path to the directory containing your sentiment model files (e.g., ./my\_sentiment\_model).  
+  * libretranslate\_url (str): The base URL of your running LibreTranslate API (e.g., http://localhost:5000).  
+* **Returns:** None.  
+* **Notes:** This method is called automatically when you create an instance of SentimentAnalyzer. It will print messages indicating model loading status and the device (CPU/GPU) being used. Raises RuntimeError if the model cannot be loaded.
 
-model_path (str): The file path to the directory containing your sentiment model files (e.g., ./my_sentiment_model).
+#### **set\_translation\_mode(self, mode: TranslationMode)**
 
-libretranslate_url (str): The base URL of your running LibreTranslate API (e.g., http://localhost:5000).
+* **Description:** Sets the translation mode that the analyzer will use for subsequent review processing. This determines how the input language is handled before sentiment analysis.  
+* **Parameters:**  
+  * mode (TranslationMode enum): The desired translation mode. You must use one of the TranslationMode enum values:  
+    * TranslationMode.AUTO\_DETECT\_AND\_TRANSLATE  
+    * TranslationMode.MANUAL\_SOURCE\_TRANSLATE\_TO\_EN  
+    * TranslationMode.NO\_TRANSLATION  
+* **Returns:** None.  
+* **Raises:** TypeError if mode is not a TranslationMode enum instance.
 
-Returns: None.
+#### **get\_predicted\_rating(self, review\_text: str, source\_lang: Optional\[str\] \= None) \-\> Dict**
 
-Notes: This method is called automatically when you create an instance of SentimentAnalyzer. It will print messages indicating model loading status and the device (CPU/GPU) being used. Raises RuntimeError if the model cannot be loaded.
+* **Description:** The primary method to get the predicted 5-star rating for a given product review. It handles language determination (auto-detect, manual, or no translation) and translation (to English) based on the current mode or an explicit override.  
+* **Parameters:**  
+  * review\_text (str): The product review string you want to analyze.  
+  * source\_lang (str, optional): An *optional* explicit 2-letter language code (e.g., 'es', 'fr') for *this specific review*. If provided, this will override the current\_translation\_mode's source determination for this call.  
+    * **Important for MANUAL\_SOURCE\_TRANSLATE\_TO\_EN mode:** If current\_translation\_mode is MANUAL\_SOURCE\_TRANSLATE\_TO\_EN, you *should* provide source\_lang when calling this method (as is handled in the example if \_\_name\_\_ \== "\_\_main\_\_": block). If not provided, it will assume English as a fallback.  
+* **Returns:** Dict containing the following keys:  
+  * 'original\_review' (str): The input review text.  
+  * 'determined\_source\_language' (str): The language code determined as the source for translation (e.g., 'en', 'es', or 'N/A' if no text).  
+  * 'translated\_text' (str): The review text after translation to English (if any). If no translation occurred, this will be the same as original\_review.  
+  * 'predicted\_star\_rating' (int): The 5-star rating (1-5). Returns 0 for empty input.  
+  * 'probabilities' (list): A list of 5 floats representing the probability for each star rating (1-star to 5-star).  
+  * 'status' (str): A string indicating the success or failure reason.
 
-set_translation_mode(self, mode: TranslationMode)
-Description: Sets the translation mode that the analyzer will use for subsequent review processing. This determines how the input language is handled before sentiment analysis.
+### **2\. LibreTranslateClient Class Methods (self.lt within SentimentAnalyzer)**
 
-Parameters:
+This class handles direct communication with your LibreTranslate server. You typically interact with this indirectly via SentimentAnalyzer.get\_predicted\_rating(), but you can also call its methods directly if you have an instance of SentimentAnalyzer (e.g., analyzer.lt.detect\_language(...)).
 
-mode (TranslationMode enum): The desired translation mode. You must use one of the TranslationMode enum values:
+#### **\_\_init\_\_(self, base\_url: str)**
 
-TranslationMode.AUTO_DETECT_AND_TRANSLATE
+* **Description:** Initializes the LibreTranslate client.  
+* **Parameters:**  
+  * base\_url (str): The base URL of your running LibreTranslate API (e.g., http://localhost:5000).  
+* **Returns:** None.
 
-TranslationMode.MANUAL_SOURCE_TRANSLATE_TO_EN
+#### **detect\_language(self, text: str) \-\> Optional\[str\]**
 
-TranslationMode.NO_TRANSLATION
+* **Description:** Sends a request to the LibreTranslate /detect endpoint to identify the language of the provided text.  
+* **Parameters:**  
+  * text (str): The text string for which to detect the language.  
+* **Returns:** str representing the 2-letter language code (e.g., 'en', 'fr', 'es') if successful, or None if detection fails or an error occurs.  
+* **Notes:** Prints console messages about the detected language and confidence.
 
-Returns: None.
+#### **translate\_text(self, text: str, source\_lang: str, target\_lang: str) \-\> Optional\[str\]**
 
-Raises: TypeError if mode is not a TranslationMode enum instance.
+* **Description:** Sends a request to the LibreTranslate /translate endpoint to translate text from a source language to a target language.  
+* **Parameters:**  
+  * text (str): The text string to be translated.  
+  * source\_lang (str): The 2-letter language code of the input text (e.g., 'es').  
+  * target\_lang (str): The 2-letter language code for the desired output translation (e.g., 'en').  
+* **Returns:** str containing the translated text if successful, or None if translation fails or an error occurs.  
+* **Notes:** Prints console messages about the translation process. If source\_lang and target\_lang are the same, it skips the API call and returns the original text.
 
-get_predicted_rating(self, review_text: str, source_lang: Optional[str] = None) -> Dict
-Description: The primary method to get the predicted 5-star rating for a given product review. It handles language determination (auto-detect, manual, or no translation) and translation (to English) based on the current mode or an explicit override.
-
-Parameters:
-
-review_text (str): The product review string you want to analyze.
-
-source_lang (str, optional): An optional explicit 2-letter language code (e.g., 'es', 'fr') for this specific review. If provided, this will override the current_translation_mode's source determination for this call.
-
-Important for MANUAL_SOURCE_TRANSLATE_TO_EN mode: If current_translation_mode is MANUAL_SOURCE_TRANSLATE_TO_EN, you should provide source_lang when calling this method (as is handled in the example if __name__ == "__main__": block). If not provided, it will assume English as a fallback.
-
-Returns: Dict containing the following keys:
-
-'original_review' (str): The input review text.
-
-'determined_source_language' (str): The language code determined as the source for translation (e.g., 'en', 'es', or 'N/A' if no text).
-
-'translated_text' (str): The review text after translation to English (if any). If no translation occurred, this will be the same as original_review.
-
-'predicted_star_rating' (int): The 5-star rating (1-5). Returns 0 for empty input.
-
-'probabilities' (list): A list of 5 floats representing the probability for each star rating (1-star to 5-star).
-
-'status' (str): A string indicating the success or failure reason.
-
-2. LibreTranslateClient Class Methods (self.lt within SentimentAnalyzer)
-This class handles direct communication with your LibreTranslate server. You typically interact with this indirectly via SentimentAnalyzer.get_predicted_rating(), but you can also call its methods directly if you have an instance of SentimentAnalyzer (e.g., analyzer.lt.detect_language(...)).
-
-__init__(self, base_url: str)
-Description: Initializes the LibreTranslate client.
-
-Parameters:
-
-base_url (str): The base URL of your running LibreTranslate API (e.g., http://localhost:5000).
-
-Returns: None.
-
-detect_language(self, text: str) -> Optional[str]
-Description: Sends a request to the LibreTranslate /detect endpoint to identify the language of the provided text.
-
-Parameters:
-
-text (str): The text string for which to detect the language.
-
-Returns: str representing the 2-letter language code (e.g., 'en', 'fr', 'es') if successful, or None if detection fails or an error occurs.
-
-Notes: Prints console messages about the detected language and confidence.
-
-translate_text(self, text: str, source_lang: str, target_lang: str) -> Optional[str]
-Description: Sends a request to the LibreTranslate /translate endpoint to translate text from a source language to a target language.
-
-Parameters:
-
-text (str): The text string to be translated.
-
-source_lang (str): The 2-letter language code of the input text (e.g., 'es').
-
-target_lang (str): The 2-letter language code for the desired output translation (e.g., 'en').
-
-Returns: str containing the translated text if successful, or None if translation fails or an error occurs.
-
-Notes: Prints console messages about the translation process. If source_lang and target_lang are the same, it skips the API call and returns the original text.
-
-This method manual should help you understand the functionality and usage of each component within the sentiment_analyzer_app.py file.
+This method manual should help you understand the functionality and usage of each component within the sentiment\_analyzer\_app.py file.
