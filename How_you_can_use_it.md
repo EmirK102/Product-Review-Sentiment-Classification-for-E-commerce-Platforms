@@ -59,7 +59,7 @@ pip install transformers requests torch
 
 You need a running LibreTranslate server. The easiest way to get started is by using Docker:
 
-docker run \-ti \-p 5000:5000 libretranslate/libretranslate
+docker run -ti --rm -p 5000:5000 libretranslate/libretranslate
 
 This command will start LibreTranslate on http://localhost:5000. If you run it on a different port or host, remember to update the libretranslate\_url when initializing the classifier.
 
