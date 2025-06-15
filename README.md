@@ -18,24 +18,24 @@ We decided to try training the model in three stages, using three disjoint subse
 The model, when paired with LibreTranslate, performed worse on non-English languages:
 
 German language accuracy: 51.4 %
+![german_language_confusion_matrix](https://github.com/user-attachments/assets/109ec26b-236e-4bdb-bd4f-94e39f7e6b52)
 
-![Alt text](confusion matrices/german_language_confusion_matrix.png)
 
 Spanish language accuracy: 50.9%
+![spanish_language_confusion_matrix](https://github.com/user-attachments/assets/ac275df0-2d9c-4163-9fed-56c140dcd071)
 
-![Alt text](confusion matrices/spanish_language_confusion_matrix.png)
 
 French language accuracy: 49.9%
+![french_language_confusion_matrix](https://github.com/user-attachments/assets/97dd568e-90bc-4371-a85e-6ea746188fbc)
 
-![Alt text](confusion matrices/french_language_confusion_matrix.png)
 
 Japanese language accuracy: 40.8%
+![japanese_language_confusion_matrix](https://github.com/user-attachments/assets/b7d2e4fc-6a52-4788-80f4-35d8d9aaf5e7)
 
-![Alt text](confusion matrices/japanese_language_confusion_matrix.png)
 
 Chinese language accuracy: 39.3%
+![chinese_language_confusion_matrix](https://github.com/user-attachments/assets/134aaee0-9078-46ea-8a2b-5d7f8dd60326)
 
-![Alt text](confusion matrices/chinese_language_confusion_matrix.png)
 
 Although this is for 5-star classification. It achieves higher accuracy on 3-label classification, achieving 76% on English-language 3-label sentiment classification.
 
