@@ -7,7 +7,7 @@ This project is about the creation of an AI model that enables its users to perf
 
 The dataset we used is called "Amazon Reviews Multi" (https://www.kaggle.com/datasets/mexwell/amazon-reviews-multi). Label-wise: it is a perfectly balanced dataset. It contains 210000 English language product reviews and, alongside the review body, has features: product category, and review title. 
 
-## Model training.
+## Model training
 
 The code we used for training and creating the model is in the provided file "sentiment_classifier_model_source_code.ipynb"
 
