@@ -229,4 +229,4 @@ If the model.safetensors, config.json, special\_tokens\_map.json, tokenizer.json
 
 ### **License**
 
-This project is licensed under the MIT License.
+This project is licensed under GNU Affero General Public License.
